@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ShowTracker - Track Your TV Shows & Movies</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/showtrack.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Auth Container -->
+    <div id="auth-container" class="container">
+      <div class="auth-card">
+        <div class="tabs">
+          <button id="login-tab" class="tab-btn active">Login</button>
+          <button id="register-tab" class="tab-btn">Register</button>
+        </div>
+        <div id="login-form" class="form-section">
+          <h2>Welcome Back!</h2>
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input
+              type="text"
+              id="login-username"
+              placeholder="Username"
+              autocomplete="username"
+            />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Password"
+              autocomplete="current-password"
+            />
+          </div>
+          <button id="login-btn" class="action-btn">Login</button>
+        </div>
+        <div id="register-form" class="form-section" style="display: none">
+          <h2>Create Account</h2>
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input
+              type="text"
+              id="register-username"
+              placeholder="Username"
+              autocomplete="username"
+            />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input
+              type="email"
+              id="register-email"
+              placeholder="Email"
+              autocomplete="email"
+            />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="register-password"
+              placeholder="Password"
+              autocomplete="new-password"
+            />
+          </div>
+          <button id="register-btn" class="action-btn">Register</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="container" style="display: none">
+      <nav class="sidebar">
+        <div class="user-info">
+          <div class="avatar"><i class="fas fa-user-circle"></i></div>
+          <h3 id="user-display-name">Username</h3>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item active" data-section="dashboard">
+            <i class="fas fa-home"></i><span>Dashboard</span>
+          </li>
+          <li class="nav-item" data-section="tv-shows">
+            <i class="fas fa-tv"></i><span>TV Shows</span>
+          </li>
+          <li class="nav-item" data-section="movies">
+            <i class="fas fa-film"></i><span>Movies</span>
+          </li>
+          <li class="nav-item" data-section="continue-watching">
+            <i class="fas fa-clock"></i><span>Continue Watching</span>
+          </li>
+          <li class="nav-item" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="content-section">
+          <h1>Dashboard</h1>
+          <div class="search-container">
+            <div class="search-box">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search by title..."
+              />
+              <button id="search-btn" class="action-btn">Search</button>
+            </div>
+            <div class="search-filters">
+              <select id="search-type">
+                <option value="all">All</option>
+                <option value="tv">TV Shows</option>
+                <option value="movie">Movies</option>
+              </select>
+              <input
+                type="number"
+                id="search-year"
+                placeholder="Year (optional)"
+                min="1900"
+                max="2099"
+              />
+            </div>
+          </div>
+          <div class="dashboard-stats">
+            <div class="stat-card" data-section="tv-shows">
+              <i class="fas fa-tv"></i>
+              <h3>TV Shows</h3>
+              <p id="tv-show-count">0</p>
+            </div>
+            <div class="stat-card" data-section="movies">
+              <i class="fas fa-film"></i>
+              <h3>Movies</h3>
+              <p id="movie-count">0</p>
+            </div>
+            <div class="stat-card" data-section="continue-watching">
+              <i class="fas fa-clock"></i>
+              <h3>Continue Watching</h3>
+              <p id="continue-count">0</p>
+            </div>
+          </div>
+          <div class="recent-activity">
+            <h2>Recent Activity</h2>
+            <div id="activity-list" class="activity-list">Loading...</div>
+          </div>
+        </section>
+
+        <!-- TV Shows Section -->
+        <section
+          id="tv-shows-section"
+          class="content-section"
+          style="display: none"
+        >
+          <h1>TV Shows</h1>
+          <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="watching">
+              Watching
+            </button>
+            <button class="filter-btn" data-filter="to-watch">
+              Plan to Watch
+            </button>
+            <button class="filter-btn" data-filter="completed">
+              Completed
+            </button>
+            <button class="filter-btn" data-filter="dropped">Dropped</button>
+          </div>
+          <div class="media-grid" id="tv-shows-grid"></div>
+        </section>
+
+        <!-- Movies Section -->
+        <section
+          id="movies-section"
+          class="content-section"
+          style="display: none"
+        >
+          <h1>Movies</h1>
+          <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="to-watch">
+              Plan to Watch
+            </button>
+            <button class="filter-btn" data-filter="watching">
+              Continue Watching
+            </button>
+            <button class="filter-btn" data-filter="completed">
+              Completed
+            </button>
+          </div>
+          <div class="media-grid" id="movies-grid"></div>
+        </section>
+
+        <!-- Continue Watching Section -->
+        <section
+          id="continue-watching-section"
+          class="content-section"
+          style="display: none"
+        >
+          <h1>Continue Watching</h1>
+          <div id="continue-watching-grid" class="media-grid"></div>
+        </section>
+
+        <!-- Search Results Section -->
+        <section
+          id="search-section"
+          class="content-section"
+          style="display: none"
+        >
+          <h1>Search TV Shows & Movies</h1>
+          <div id="search-results"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Media Details Modal -->
+    <div id="media-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+          <div class="media-details">
+            <div class="media-poster">
+              <img id="modal-poster" src="" alt="Poster" />
+            </div>
+            <div class="media-info">
+              <h2 id="modal-title"></h2>
+              <p id="modal-year"></p>
+              <p id="modal-overview"></p>
+              <div class="status-section">
+                <h3>Status</h3>
+                <select id="modal-status">
+                  <option value="to-watch">Plan to Watch</option>
+                  <option value="watching">Watching</option>
+                  <option value="completed">Completed</option>
+                  <option value="dropped">Dropped</option>
+                </select>
+              </div>
+              <div
+                id="episode-section"
+                class="episode-section"
+                style="display: none"
+              >
+                <h3>Season Progress</h3>
+                <label
+                  >Season:
+                  <input type="number" id="current-season" min="1" value="1"
+                /></label>
+                <label style="margin-left: 15px"
+                  >Episode:
+                  <input type="number" id="current-episode" min="1" value="1"
+                /></label>
+                <div>
+                  <label for="watched-episodes">Episodes Watched:</label>
+                  <input
+                    type="number"
+                    id="watched-episodes"
+                    min="0"
+                    value="0"
+                  />
+                  <span>/</span><span id="total-episodes">?</span>
+                </div>
+              </div>
+              <div
+                id="movie-progress-section"
+                class="movie-progress-section"
+                style="display: none"
+              >
+                <h3>Progress (%)</h3>
+                <input
+                  type="range"
+                  id="movie-progress"
+                  min="0"
+                  max="100"
+                  value="0"
+                />
+                <span id="progress-percentage">0%</span>
+              </div>
+              <div class="modal-actions">
+                <button id="save-media-btn" class="action-btn">Save</button>
+                <button id="cancel-media-btn" class="action-btn danger">
+                  Cancel
+                </button>
+                <button
+                  id="remove-media-btn"
+                  class="action-btn danger"
+                  style="display: none"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Verification Modal -->
+    <div id="verification-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body verification">
+          <h2>Image Verification</h2>
+          <p>Is this the correct poster for <span id="verify-title"></span>?</p>
+          <div class="verify-image">
+            <img id="verify-poster" src="" alt="Poster" />
+          </div>
+          <div class="verification-buttons">
+            <button id="confirm-image-btn" class="action-btn">
+              Yes, this is correct
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Container (optional) -->
+    <div id="notification-container"></div>
+
+    <!-- JS Script -->
+    <script src="{{ url_for('static', filename='js/showtrack.js') }}"></script>
+  </body>
+</html>
