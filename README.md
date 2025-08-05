@@ -1,22 +1,22 @@
-# 🎬 ShowTracker
+# ShowTracker
 
 **ShowTracker** is a Flask-based web app that helps users track TV shows and movies — with progress tracking, search, and watchlist management.
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ User registration and login
-- 🔍 Search TV shows & movies via TMDb API
-- ➕ Add to personal watchlist
-- 📊 Track season/episode/movie progress
-- 🔄 Status: Plan to Watch / Watching / Completed / Dropped
-- 🕒 Activity log (recently updated)
-- ✅ Frontend image verification before adding media
+-  User registration and login
+-  Search TV shows & movies via TMDb API
+-  Add to personal watchlist
+-  Track season/episode/movie progress
+-  Status: Plan to Watch / Watching / Completed / Dropped
+-  Activity log (recently updated)
+-  Frontend image verification before adding media
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 - Python (Flask)
 - SQLite
@@ -26,7 +26,7 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.6+
