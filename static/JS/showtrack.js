@@ -363,7 +363,7 @@ async function handleSearch() {
     const searchTypes = type === "all" ? ["tv", "movie"] : [type];
 
     for (let mediaType of searchTypes) {
-      const url = `/api/tmdb_search?media_type=${mediaType}&query=${encodeURIComponent(query)}${year ? `&year=${year}` : ''}`;
+      const url = `/api/tmdb/search?media_type=${mediaType}&query=${encodeURIComponent(query)}${year ? `&year=${year}` : ''}`;
       const res = await fetch(url);
       const data = await res.json();
 
