@@ -1,5 +1,4 @@
 // === CONFIG ===
-const TMDB_API_KEY = "bf08453a0a7c021e10ca59f58066314a";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const DEBUG_MODE = true;
@@ -364,8 +363,7 @@ async function handleSearch() {
     const searchTypes = type === "all" ? ["tv", "movie"] : [type];
 
     for (let mediaType of searchTypes) {
-      const url = `${TMDB_BASE_URL}/search/${mediaType}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}` +
-        (year ? (mediaType === "tv" ? `&first_air_date_year=${year}` : `&year=${year}`) : "");
+      const url = `/api/tmdb_search?media_type=${mediaType}&query=${encodeURIComponent(query)}${year ? `&year=${year}` : ''}`;
       const res = await fetch(url);
       const data = await res.json();
 
@@ -375,9 +373,11 @@ async function handleSearch() {
           tmdbId: item.id,
           type: mediaType,
           title: mediaType === "tv" ? item.name : item.title,
-          year: mediaType === "tv" ? (item.first_air_date ? item.first_air_date.substring(0,4) : "Unknown") : (item.release_date ? item.release_date.substring(0,4) : "Unknown"),
+          year: mediaType === "tv"
+            ? (item.first_air_date ? item.first_air_date.substring(0, 4) : "Unknown")
+            : (item.release_date ? item.release_date.substring(0, 4) : "Unknown"),
           overview: item.overview,
-          posterPath: item.poster_path ? `${TMDB_IMAGE_URL}${item.poster_path}` : null
+          posterPath: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : null
         }));
         combinedResults = combinedResults.concat(mapped);
       }
@@ -388,7 +388,7 @@ async function handleSearch() {
       return;
     }
 
-    combinedResults.sort((a,b) => Number(b.year) - Number(a.year));
+    combinedResults.sort((a, b) => Number(b.year) - Number(a.year));
 
     const grid = document.createElement("div");
     grid.className = "media-grid";
@@ -401,7 +401,7 @@ async function handleSearch() {
     resultsContainer.innerHTML = `<div class="error-message">Search failed. Please try again.</div>`;
   }
 }
-
+    
 function createSearchResultCard(media) {
   const card = document.createElement("div");
   card.className = "media-card";
