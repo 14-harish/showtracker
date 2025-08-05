@@ -1,16 +1,18 @@
-GROQ_API_KEY = os.getenv("GROQ_API_KEY"from flask import Flask, request, jsonify, render_template, send_from_directory, session
+from flask import Flask, request, jsonify, render_template, send_from_directory, session
 import sqlite3
 import os
 import requests
 import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'f1e9cbf7dc3743c0912a8e0c6e0fb536a21742a95246e6909d8a8f74d3945f3d'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 DATABASE = "showtracker.db"
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-TMDB_API_KEY = "bf08453a0a7c021e10ca59f58066314a"
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 DEBUG_MODE = True  # Toggle this to enable/disable debug prints
 
