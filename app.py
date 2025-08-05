@@ -14,6 +14,38 @@ DATABASE = "showtracker.db"
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
+@app.route("/api/tmdb/search")
+def tmdb_search():
+    query = request.args.get("query")
+    media_type = request.args.get("media_type")
+    year = request.args.get("year")
+
+    if not query or not media_type:
+        return jsonify({"error": "Missing query or media_type"}), 400
+
+    TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+    if not TMDB_API_KEY:
+        return jsonify({"error": "TMDB API key not set"}), 500
+
+    tmdb_url = f"https://api.themoviedb.org/3/search/{media_type}"
+    params = {
+        "api_key": TMDB_API_KEY,
+        "query": query
+    }
+
+    if year:
+        if media_type == "tv":
+            params["first_air_date_year"] = year
+        elif media_type == "movie":
+            params["year"] = year
+
+    try:
+        response = requests.get(tmdb_url, params=params)
+        response.raise_for_status()
+        return jsonify(response.json())
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
 DEBUG_MODE = True  # Toggle this to enable/disable debug prints
 
 def log_debug(message, data=None):
