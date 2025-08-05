@@ -1,3 +1,15 @@
-.env
-showtracker.db
+# Python
 __pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+*.log
+
+# Environment
+.env
+venv/
+ENV/
+*.env
+
+# macOS
+.DS_Store
